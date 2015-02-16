@@ -74,6 +74,12 @@ App.get('/auth/google/callback', Passport.authenticate('google', {
 }))
 // end of 2.1
 
+// 8.0
+App.get('/auth/logout', function(req, res) {
+	req.logout();
+	res.status(200).json(req.user) // or .send('success')
+})
+
 // 4.0.1
 App.get('/api/me', function(req, res) {
 	return res.json(req.user);

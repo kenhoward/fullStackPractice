@@ -8,8 +8,16 @@
 </head>
 	<body ng-app='fullStack' ng-controller='mainCtrl'>
 
+	<div class="container">
+		<nav><a href='/auth/google' ng-show='user'><button class='btn btn-primary'>Login</button></a>
+		<button ng-show'user' ng-click='logout()' class='btn btn-warning'>Logout</button>
+		<a><button class='btn btn-default'></button></a>
+		</nav>
 
-<ng-view></ng-view>
+		<h1>ECOMMERCE FRONT END</h1>
+		
+		<ng-view></ng-view>
+	</div>
 
 	<script type="text/javascript" src='/app/main/app.js'></script>
 	<script type="text/javascript" src='/app/main/app.js'></script>
