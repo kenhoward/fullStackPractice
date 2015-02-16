@@ -11,10 +11,33 @@ var Passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth').OAuthStrategy;
 // end of 2.0
 // 3.0
-var Session = require('express-session')
+var Session = require('express-session');
 // end of 3.0
+// 5.0
+var Mongoose = require('mongoose');
+// end 5.0
+
 
 var port = 9001;
+
+// 4.0
+Passport.serializeUser(function(user, done) {
+	console.log('Serializing: ', user);
+	done(null, user);
+})
+
+Passport.deserializeUser(function(obj, done) {
+	// 6.0
+	userCtrl.getUser(obj.id).then(function(results) {
+		done(null, results);
+	}, function(err) {
+		// INPUT HERE
+	})
+	console.log('Deserializing: ', obj);
+	// part of 4.0 that was moved when I did 6.0
+	// done(null, obj);
+})
+// end 4.0
 
 // 3.0.1
 App.use(BodyParser.json());
@@ -30,7 +53,14 @@ Passport.use(new GoogleStrategy({
     clientSecret: 'vjNsn-M-OYhGUNN9N2lUeG4g',
     callbackURL: "http://localhost:9001/auth/google/callback"
   },function(token, tokenSecret, profile, done) {
-      return done(null, profile);
+  	// 5.0
+  	userCtrl.updateOrCreate(profile).then(function(results) { // *** takes this from the userCtrl ***
+  		return done(null, profile);
+  	}, function(err) {
+  		done(err, profile);
+  	})
+  	// end 5.0
+    	
 }));
 
 App.get('/auth/google', Passport.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login'}));
@@ -41,6 +71,17 @@ App.get('/auth/google/callback', Passport.authenticate('google', {
 	res.redirect('/api/me')
 }))
 // end of 2.1
+
+// 4.0.1
+App.get('/api/me', function(req, res) {
+	return res.json(req.user);
+})
+// end 4.0.1
+
+// 5.0.2
+Mongoose.connect(mongoURI, function() {
+	console.log('Connected to MongoDB at ' + mongoURI)
+})
 
 App.listen(port, function() {
 	console.log('Now listening to ' + port);
