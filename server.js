@@ -39,6 +39,8 @@ Passport.deserializeUser(function(obj, done) {
 })
 // end 4.0
 
+// 7.0
+App.use(Express.static(__dirname + '/public'));
 // 3.0.1
 App.use(BodyParser.json());
 App.use(Session({secret: 'sdfkjaksdfjdDFJk#2dkfj'}));
