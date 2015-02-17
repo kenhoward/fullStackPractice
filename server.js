@@ -17,8 +17,9 @@ var Session = require('express-session');
 var Mongoose = require('mongoose');
 // end 5.0
 
-
 var port = 9001;
+
+// Middleware ========================================================================================================
 
 // 4.0
 Passport.serializeUser(function(user, done) {
@@ -61,9 +62,12 @@ Passport.use(new GoogleStrategy({
   	}, function(err) {
   		done(err, profile);
   	})
-  	// end 5.0
-    	
+  	// end 5.0	
 }));
+
+
+
+// Authentication ====================================================================================================
 
 App.get('/auth/google', Passport.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login'}));
 
@@ -85,6 +89,11 @@ App.get('/api/me', function(req, res) {
 	return res.json(req.user);
 })
 // end 4.0.1
+
+
+
+
+// Conecctions ========================================================================================================
 
 // 5.0.2
 Mongoose.connect(mongoURI, function() {
